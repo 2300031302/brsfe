@@ -1,0 +1,37 @@
+#root {
+  width: 100%;
+  /* padding: 2rem */
+  /* padding: 0px 10px 0px 10px; */
+}
+
+/* Ensure the entire app takes full height */
+body, html, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* App layout */
+.main-content-App {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex: 1;
+}
+
+/* Make sure Router layout grows and Footer sticks at bottom if needed */
+body, #root {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-App {
+  flex-grow: 1;
+}
+
+/* Optional: style for full-width footer */
+footer {
+  background-color: #222;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+

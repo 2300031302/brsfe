@@ -1,0 +1,43 @@
+/* BusSeats.css */
+.bus-seats {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Outer gap */
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* More gap between sections */
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gap between rows */
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 5px; /* Gap between seats */
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.visible {
+  border: 1px solid black;
+  background-color: #f0f0f0;
+}
+
+.hidden {
+  border: none;
+  background-color: transparent;
+}

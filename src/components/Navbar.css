@@ -1,0 +1,19 @@
+.navbar {
+  display: flex;
+  gap: 60px;
+  list-style: none;
+  font-size: 1.2rem;
+  /* margin-top: 20px; */
+  font-family: 'Didot', serif;
+  align-items: center;
+  min-height: 50px;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 2px 0;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  color: #000;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
