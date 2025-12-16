@@ -2,13 +2,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px; /* gap between outer groups */
+  gap: 30px; 
+  /* background-color: #58b8b340; */
 }
 
 .outer-group {
   display: flex;
   flex-direction: column;
-  
+  /* background-color: #0fb5ad40; */
   gap: 20px; /* gap between inner groups */
 }
 

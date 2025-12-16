@@ -5,6 +5,8 @@ import "./UserForm.css";
 import { PassengerContext } from "../context/PassengerContext";
 import { ContactContext } from "../context/ContactContext";
 import { BusContext } from "../context/BusContext";
+import emailjs from "emailjs-com";
+import { addBooking } from "../storage/Storagee";
 
 const blankUser = () => ({ name: "", age: "", gender: "" });
 
@@ -46,7 +48,7 @@ const UserForm = () => {
       (user) => user.name && user.age && user.gender
     );
 
-    const contactComplete =contactInfo.nameNumber && contactInfo.whatsappNumber && contactInfo.email;
+    const contactComplete = contactInfo.nameNumber && contactInfo.whatsappNumber && contactInfo.email;
 
     if (!allUsersComplete) {
       alert("❌ Please fill in all user details (Name, Age, Gender)");
@@ -99,8 +101,29 @@ const UserForm = () => {
     const rzp = new window.Razorpay(options);
     // ensure PDF is generated whether payment succeeds or fails
     rzp.open();
+    emailjs.send(
+      "service_65qu4pj",        // Service ID
+      "template_so1vaha",         // Template ID
+      {
+        booking_id: 1,
+        orders: numberOfSeats + " seat" + (numberOfSeats > 1 ? "s" : ""),
+        seats: busDetails?.selectedSeats?.join(", ") || "N/A",
+        cost: busDetails?.totalAmount || "N/A",
+        email: contactInfo.email,
+        order_id: 1,
+      },
+      "j2WdVyiwi3sQsH2Zp"     // <-- REQUIRED
+    )
+      .then(() => {
+        console.log("Email sent successfully!");
+      })
+      .catch((err) => {
+        console.log("Email send error:", err);
+        console.log("Failed to send email!");
+      });
+
     createPdfAndCleanup();
-    
+
 
 
   };
@@ -164,6 +187,32 @@ const UserForm = () => {
       doc.text(`Total Paid: ₹${sanitize(totalPaid)}`, 14, y + 12);
 
       doc.save('booking-ticket.pdf');
+
+      // Add booking data to storage
+      try {
+        const bookingData = {
+          id: Date.now(), // unique booking ID
+          busId: b.busId,
+          userId: Date.now(), // use timestamp as user ID (can be improved with actual user from auth)
+          date: b.date || new Date().toISOString().split('T')[0],
+          source: b.source || '',
+          destination: b.destination || '',
+          seats: b.selectedSeats || [], // array of selected seat names
+          totalAmount: totalPaid,
+          userDetails: users, // array of passenger details {name, age, gender}
+          contact: {
+            name: contactInfo.nameNumber,
+            phone: contactInfo.nameNumber,
+            whatsappNumber: contactInfo.whatsappNumber,
+            email: contactInfo.email,
+          }
+        };
+        
+        await addBooking(bookingData);
+        console.log('Booking saved to storage:', bookingData);
+      } catch (err) {
+        console.error('Failed to save booking to storage', err);
+      }
 
     } catch (err) {
       console.error('Failed to generate PDF', err);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BookingPage.css';
 import BusSeats from './BusSeats';
+import { getBusesRoute, getSeatsStatusByBusAndDate } from '../storage/Storagee';
 
 
 // Sample cities and routes
@@ -50,7 +51,7 @@ function BookingPage() {
       seats: [
         [
           [
-            { a1: false, b1: true, c1: true, d1: false, e1: true, f1: true, g1: false, h1: false },
+            { a1: true, b1: true, c1: true, d1: false, e1: true, f1: true, g1: false, h1: false },
             { a2: false, b2: false, c2: true, d2: true, e2: false, f2: false, g2: true, h2: true }
           ],
           [
@@ -414,16 +415,24 @@ function BookingPage() {
     navigate("/payment"); // React Router navigation
   };
 
-  const handleSearch = () => {
-    const result = busData.filter(bus => {
-      const startIndex = bus.route.indexOf(from.toLowerCase());
-      const destIndex = bus.route.indexOf(to.toLowerCase());
-      return startIndex !== -1 && destIndex !== -1 && destIndex > startIndex;
-    });
-    setFilteredBuses(result);
+  const handleSearch = async () => {
+    // Get buses from storage using getBusesRoute
+    const routes = await getBusesRoute(from.toLowerCase(), to.toLowerCase());
+    
+    // Sync seat status for each bus based on bookings
+    const updatedBuses = await Promise.all(
+      routes.map(bus => getSeatsStatusByBusAndDate(bus, startDate, from.toLowerCase(), to.toLowerCase()))
+    );
+    
+    setFilteredBuses(updatedBuses);
     setSelectedBus(null);
     setSelectedSeats([]);
   };
+
+  const getTiming = (bus) => {
+    const startIndex = bus.route.indexOf(from.toLowerCase());
+    return bus.time[startIndex]+" --- "+bus.time[bus.route.indexOf(to.toLowerCase())];
+  }
 
   const getFair = (bus) => {
     const startIndex = bus.route.indexOf(from.toLowerCase());
@@ -505,7 +514,8 @@ function BookingPage() {
             {filteredBuses.map(bus => (
               <div className="bus-single-info" key={bus.id}>
                 <li key={bus.id}>
-                  {bus.name} | Fare: ₹{getFair(bus)}
+                  <span className="bus-left">{bus.name}</span>
+                  <span className="bus-center">Fare: ₹{getFair(bus)} — {getTiming(bus)}</span>
                   <button onClick={() => openBus(bus.id)}>select seats</button>
                 </li>
                 {selectedBus === bus.id && (<BusSeats bus={bus} openBus={openBus} price={getFair(bus)} date={startDate} />)}
@@ -542,11 +552,7 @@ function BookingPage() {
         </div>
       )} */}
 
-      <BusSeats
-        bus={busData}
-        onSeatToggle={handleSeatToggle}
-        onProceedBooking={handleProceedBooking}
-      />
+      
 
     </div>
   );

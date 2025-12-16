@@ -14,6 +14,7 @@ import { ContactProvider } from './context/ContactContext'
 import { BusProvider } from './context/BusContext'
 import UserForm from './components/UserForm'
 import OfferCard from './components/OfferCard'
+import History from './components/History'
 
 function App() {
 
@@ -59,6 +60,7 @@ const slidesData = [
                   <Route path="/" element={ <Home /> } />
                   <Route path='/booking' element={ <BookingPage /> } />
                   <Route path='/userform' element={ <UserForm /> } />
+                  <Route path='/history' element={ <History /> } />
                 </Routes>
               </div >
               <Footer />

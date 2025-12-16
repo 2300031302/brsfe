@@ -24,6 +24,7 @@
 }
 
 .login-form input[type="text"],
+.login-form input[type="email"],
 .login-form input[type="password"] {
   width: 100%;
   padding: 10px 12px;
@@ -73,4 +74,21 @@
 
 .login-form a:hover {
   text-decoration: underline;
+}
+
+.login-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.login-form input:disabled,
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

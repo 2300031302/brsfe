@@ -17,6 +17,7 @@ import OffersSection from "./OffersSection";
 import ExpandableComponent from "./ExpandableComponent";
 import BusSeats from "./BusSeats";
 
+
 const highlights = [
   {
     icon: "⭐",
@@ -81,6 +82,7 @@ function Home() {
       
       <OffersSection /> */}
 
+      {/* <OfferSection /> */}
       <UserForm />
 
       

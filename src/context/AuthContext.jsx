@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { addUser, getUserByEmail } from "../storage/Storagee";
 // import axios from "axios"; // Uncomment when backend API is ready
 
 export const AuthContext = createContext();
@@ -20,26 +21,32 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // 🔹 Signup function
-  const signup = (name, email, password, phone, role = "user") => {
-    // --- LocalStorage logic (temporary) ---
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    
-    const exists = users.find((u) => u.email === email);
-    if (exists) {
-      return { success: false, message: "User already exists" };
+  const signup = async (name, email, password, phone, role = "user") => {
+    try {
+      // Check if user already exists in storage
+      const existingUser = await getUserByEmail(email);
+      if (existingUser) {
+        return { success: false, message: "User already exists" };
+      }
+
+      const newUser = { id: Date.now(), name, email, password, phone, role, bookings: [] };
+      
+      // Add user to storage (Storagee.js)
+      await addUser(newUser);
+      
+      // Also save to localStorage for quick access
+      localStorage.setItem("user", JSON.stringify(newUser));
+
+      setUser(newUser);
+      setIsLoggedIn(true);
+      setIsAdmin(role === "admin");
+      console.log("Signup successful:", newUser);
+
+      return { success: true, message: "Signup successful" };
+    } catch (err) {
+      console.error("Signup error:", err);
+      return { success: false, message: "Signup failed" };
     }
-
-    const newUser = { id: Date.now(), name, email, password, phone, role };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("user", JSON.stringify(newUser));
-
-    setUser(newUser);
-    setIsLoggedIn(true);
-    setIsAdmin(role === "admin");
-    console.log("Signup successful:", newUser);
-
-    return { success: true, message: "Signup successful" };
 
     /*
     // --- Database API version (Spring Boot/Node backend) ---
@@ -55,24 +62,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   // 🔹 Login function
-  const login = (email, password) => {
-    // --- LocalStorage logic (temporary) ---
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    console.log(users);
-    const existingUser = users.find((u) => u.email === email && u.password === password);
+  const login = async (email, password) => {
+    try {
+      // Check if user exists in storage
+      const existingUser = await getUserByEmail(email);
+      
+      if (!existingUser || existingUser.password !== password) {
+        console.log("No user found with these credentials");
+        return { success: false, message: "Invalid email or password" };
+      }
 
-    if (!existingUser) {
-      console.log("No user found with these credentials");
-      return { success: false, message: "Invalid email or password" };
+      localStorage.setItem("user", JSON.stringify(existingUser));
+      setUser(existingUser);
+      setIsLoggedIn(true);
+      setIsAdmin(existingUser.role === "admin");
+      console.log("Login successful:", existingUser);
+
+      return { success: true, message: "Login successful" };
+    } catch (err) {
+      console.error("Login error:", err);
+      return { success: false, message: "Login failed" };
     }
-
-    localStorage.setItem("user", JSON.stringify(existingUser));
-    setUser(existingUser);
-    setIsLoggedIn(true);
-    setIsAdmin(existingUser.role === "admin");
-    console.log("Login successful:", existingUser);
-
-    return { success: true, message: "Login successful" };
 
     /*
     // --- Database API version ---

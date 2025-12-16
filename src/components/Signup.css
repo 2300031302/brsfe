@@ -75,3 +75,101 @@
 .signup-form a:hover {
   text-decoration: underline;
 }
+
+/* OTP verification styles */
+.signup-otp {
+  width: 380px;
+  margin: 48px auto;
+  padding: 24px 28px;
+  background: linear-gradient(180deg, #fff5fb 0%, #fff 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(240, 133, 200, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.signup-otp h3 {
+  margin: 0;
+  text-align: center;
+  color: #333;
+  font-size: 20px;
+}
+
+.signup-otp p {
+  text-align: center;
+  color: #666;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.signup-otp form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.signup-otp input[type="text"],
+.signup-otp input[type="email"],
+.signup-otp input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e8c8df;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.otp-error {
+  background-color: #fff0f4;
+  border: 1px solid #ffd1e8;
+  color: #b02a4a;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.signup-otp .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.signup-otp .primary-btn,
+.signup-form button {
+  background-color: #FF6AC1;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.signup-otp .primary-btn:hover,
+.signup-form button:hover {
+  background-color: #e057af;
+}
+
+.signup-otp .secondary-btn {
+  background: transparent;
+  border: 1px solid #ffd1e8;
+  color: #e057af;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.signup-otp .secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* small responsiveness */
+@media (max-width: 420px) {
+  .signup-otp, .signup-form { width: calc(100% - 32px); margin: 24px auto; }
+}
